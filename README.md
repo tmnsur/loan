@@ -44,7 +44,7 @@ Maven install task will automatically run all unit tests and if everything goes 
 
 In production, once you have the output JAR file in your deployment environment, you can execute the following lines to run the service:
 
-> jwt.secret=<your-base64-encoded-external-jwt-token-server-HMAC-SHA256-secret> java -jar loan-1.0.0.jar
+> jwt.secret=_your-base64-encoded-external-jwt-token-server-HMAC-SHA256-secret_ java -jar loan-1.0.0.jar
 
 In demonstration mode, you can directly run the app in your building environment using the following maven line:
 
@@ -108,8 +108,8 @@ Using this token, the regular customer user can access the regular `/api/v1/loan
 Use the following curl line to create a loan:
 
 When using admin user:
-> curl --location 'http://localhost:8080/api/v1/admin/<desired-customer-username>/loan' \
---header 'Authorization: Bearer <your-admin-jwt-token>' \
+> curl --location 'http://localhost:8080/api/v1/admin/_desired-customer-username_/loan' \
+--header 'Authorization: Bearer _your-admin-jwt-token_' \
 --header 'Content-Type: application/json' \
 --data '{
 "numberOfInstallments": 6,
@@ -148,10 +148,22 @@ When using admin user:
 "paid": false
 }
 
-customer account will be detected via the supplied `<desired-customer-username>` path variable. This endpoint will respond with an HTTP/400 when an unknown `<desired-customer-username>` is supplied:
+Example:
+
+> curl --location 'http://localhost:8080/api/v1/admin/first.customer/loan' \
+--header 'Authorization: Bearer _your-admin-jwt-token_' \
+--header 'Content-Type: application/json' \
+--data '{
+"numberOfInstallments": 6,
+"interestRate": "0.2",
+"loanAmount": "100"
+}'<br><br>
+> ...
+
+customer account will be detected via the supplied `_desired-customer-username_` path variable. This endpoint will respond with an HTTP/400 when an unknown `_desired-customer-username_` is supplied:
 
 > curl --location 'http://localhost:8080/api/v1/admin/unknown/loan' \
---header 'Authorization: Bearer <your-admin-jwt-token>' \
+--header 'Authorization: Bearer _your-admin-jwt-token_' \
 --header 'Content-Type: application/json' \
 --data '{
 "numberOfInstallments": 6,
@@ -165,7 +177,7 @@ customer account will be detected via the supplied `<desired-customer-username>`
 When using regular customer user:
 
 > curl --location 'http://localhost:8080/api/v1/loan' \
---header 'Authorization: Bearer <your-regular-customer-user-jwt-token>' \
+--header 'Authorization: Bearer _your-regular-customer-user-jwt-token_' \
 --header 'Content-Type: application/json' \
 --data '{
 "numberOfInstallments": 6,
@@ -189,7 +201,7 @@ When using regular customer user:
 Use the following curl to list your regular customer account's loans:
 
 > curl --location 'http://localhost:8080/api/v1/loan' \
---header 'Authorization: Bearer <your-regular-customer-user-jwt-token>'<br><br>
+--header 'Authorization: Bearer _your-regular-customer-user-jwt-token_'<br><br>
 > {
 "content": [
 {
@@ -245,7 +257,7 @@ Use the following curl to list your regular customer account's loans:
 This API supports pagination query parameters and returns a paginated response. The default page size is 10. When there are multiple pages, you can supply `page=2`, `page=3` as a query parameter to get the other pages. You can also tweak the `pageSize` to get more results in one page. Example:
 
 > curl --location 'http://localhost:8080/api/v1/loan?page=2&pageSize=20' \
---header 'Authorization: Bearer <your-regular-customer-user-jwt-token>'<br><br>
+--header 'Authorization: Bearer _your-regular-customer-user-jwt-token_'<br><br>
 > {
 "content": [],
 "page": {
@@ -263,7 +275,7 @@ When using an admin JWT token, the required change in the request and its respon
 Use the following curl to list the installments of one of your regular customer account's loans:
 
 > curl --location 'http://localhost:8080/api/v1/loan/1/installment' \
---header 'Authorization: Bearer <your-regular-customer-user-jwt-token>'<br><br>
+--header 'Authorization: Bearer _your-regular-customer-user-jwt-token_'<br><br>
 > [
 {
 "dueDate": "2025-03-01",
@@ -302,7 +314,7 @@ Use the following curl to list the installments of one of your regular customer 
 Use the following curl to pay for one of your regular customer account's loans:
 
 > curl --location --request PATCH 'http://localhost:8080/api/v1/loan/1' \
---header 'Authorization: Bearer <your-regular-customer-user-jwt-token>' \
+--header 'Authorization: Bearer _your-regular-customer-user-jwt-token_' \
 --header 'Content-Type: application/json' \
 --data '{
 "amount": "60"
